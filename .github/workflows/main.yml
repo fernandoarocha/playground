@@ -30,7 +30,7 @@ jobs:
       - name: Deploy to Heroku
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
-          heroku_api_key: 75979f2f-b050-4355-bd99-ffd07240c169
+          heroku_api_key: ${{HEROKU_API_SECRET}}
           heroku_app_name: fernando-playground
           heroku_email: fernandorocha676@gmail.com
           branch: main
