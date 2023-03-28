@@ -4,11 +4,9 @@ on:
   push:
     branches:
       - main
-
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -16,7 +14,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14.x'
+          node-version: '16.x'
 
       - name: Install dependencies
         run: npm install
@@ -26,23 +24,19 @@ jobs:
 
       - name: Tests
         run: npm run test
+  deploy:
+    concurrency:
+      group: heroku_deployment
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
 
-      - name: heroku-deploy
-        on:
-          push:
-            branches: [ main ]
-        jobs:
-        build:
-          runs-on: ubuntu-latest
-          steps:
-            - uses: actions/checkout@v2
-            - uses: akhileshns/heroku-deploy@v3.4.6
-              with:
-                heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-                heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
-                heroku_email: ${{secrets.HEROKU_EMAIL}}
-
-
-
-            - name: Run a one-line script
-              run: echo successfully run
+  needs: build[build]
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Deploy to heroku
+      uses: AkhileshNS/heroku-deploy@v3.12.12
+      with:
+        heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+        heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
+        heroku_email: ${{secrets.HEROKU_EMAIL}}
