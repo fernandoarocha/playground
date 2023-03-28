@@ -30,7 +30,7 @@ jobs:
       cancel-in-progress: false
     runs-on: ubuntu-latest
 
-  needs: build[build]
+  needs: build
   steps:
     - name: Checkout repository
       uses: actions/checkout@v3
