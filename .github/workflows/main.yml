@@ -24,18 +24,19 @@ jobs:
 
       - name: Tests
         run: npm run test
-  deploy:
-    concurrency:
-      group: heroku_deployment
-      cancel-in-progress: false
-      runs-on: ubuntu-latest
-      needs: build
-      steps:
-        - name: Checkout repository
-          uses: actions/checkout@v3
-        - name: Deploy to heroku
-          uses: AkhileshNS/heroku-deploy@v3.12.12
-          with:
-            heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-            heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
-            heroku_email: ${{secrets.HEROKU_EMAIL}}
+
+      - name: Deploy Heroku
+        on:
+          push:
+            branches:
+              - main
+        jobs:
+          build:
+            runs-on: ubuntu-latest
+            steps:
+              - uses: actions/checkout@v2
+              - uses: akhileshns/heroku-deploy@v3.12.13
+                with:
+                  heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+                  heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
+                  heroku_email: ${{secrets.HEROKU_EMAIL}}
