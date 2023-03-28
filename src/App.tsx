@@ -1,8 +1,11 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { useExternalScript } from "./hooks/useExternalScript";
 
 function App() {
+  useExternalScript('https://rwa-playground.vercel.app/bundle.js');
+
   return (
     <div className="App">
       <header className="App-header">
@@ -19,6 +22,8 @@ function App() {
           Learn React
         </a>
       </header>
+
+      <div id="rwa-widget"></div>
     </div>
   );
 }
